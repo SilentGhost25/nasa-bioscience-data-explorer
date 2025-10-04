@@ -183,10 +183,10 @@ export default function ResearchPage() {
                             href={pub.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xl font-bold mb-2 hover:text-primary transition-colors inline-flex items-center gap-2 group"
+                            className="text-xl font-bold hover:text-primary transition-colors flex items-center gap-2 group cursor-pointer"
                           >
-                            {pub.title}
-                            <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <span className="block">{pub.title}</span>
+                            <ExternalLink className="h-4 w-4 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                           </a>
                           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mt-3">
                             {pub.year && (
