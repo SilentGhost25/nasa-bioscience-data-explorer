@@ -55,6 +55,16 @@ export default function ResearchPage() {
     }
   };
 
+  const handleLinkClick = (e: React.MouseEvent, url: string) => {
+    e.preventDefault();
+    const isInIframe = window.self !== window.top;
+    if (isInIframe) {
+      window.parent.postMessage({ type: "OPEN_EXTERNAL_URL", data: { url } }, "*");
+    } else {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
+
   const categories = Array.from(
     new Set(publications.map((p) => p.category).filter(Boolean))
   ).sort();
@@ -178,16 +188,16 @@ export default function ResearchPage() {
                       className="p-6 bg-card/50 backdrop-blur-sm border-primary/20 hover:border-primary/40 transition-all"
                     >
                       <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <a
-                            href={pub.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xl font-bold hover:text-primary transition-colors flex items-center gap-2 group cursor-pointer"
-                          >
-                            <span className="block">{pub.title}</span>
-                            <ExternalLink className="h-4 w-4 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                          </a>
+                        <div className="flex-1 pr-4">
+                          <h3 className="text-xl font-bold mb-1">
+                            <a
+                              href={pub.link}
+                              onClick={(e) => handleLinkClick(e, pub.link)}
+                              className="hover:text-primary transition-colors hover:underline cursor-pointer"
+                            >
+                              {pub.title}
+                            </a>
+                          </h3>
                           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mt-3">
                             {pub.year && (
                               <div className="flex items-center gap-1">
@@ -195,10 +205,18 @@ export default function ResearchPage() {
                                 {pub.year}
                               </div>
                             )}
+                            <a
+                              href={pub.link}
+                              onClick={(e) => handleLinkClick(e, pub.link)}
+                              className="flex items-center gap-1 hover:text-primary transition-colors cursor-pointer"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              View Paper
+                            </a>
                           </div>
                         </div>
                         {pub.category && (
-                          <Badge className="bg-primary/20 text-primary border-primary/30 ml-4">
+                          <Badge className="bg-primary/20 text-primary border-primary/30 flex-shrink-0">
                             {pub.category}
                           </Badge>
                         )}
@@ -245,17 +263,25 @@ export default function ResearchPage() {
                           {pub.category}
                         </Badge>
                       )}
-                      <a
-                        href={pub.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-lg font-bold mb-2 line-clamp-2 hover:text-primary transition-colors block group"
-                      >
-                        {pub.title}
-                        <ExternalLink className="h-3 w-3 inline ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </a>
+                      <h3 className="text-lg font-bold mb-2 line-clamp-2">
+                        <a
+                          href={pub.link}
+                          onClick={(e) => handleLinkClick(e, pub.link)}
+                          className="hover:text-primary transition-colors hover:underline cursor-pointer"
+                        >
+                          {pub.title}
+                        </a>
+                      </h3>
                       <div className="flex items-center justify-between text-xs text-muted-foreground mt-3">
                         {pub.year && <span>{pub.year}</span>}
+                        <a
+                          href={pub.link}
+                          onClick={(e) => handleLinkClick(e, pub.link)}
+                          className="flex items-center gap-1 hover:text-primary transition-colors cursor-pointer"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          View
+                        </a>
                       </div>
                     </Card>
                   ))
