@@ -25,8 +25,15 @@ const generateGraphData = () => {
 
   // Generate edges based on shared keywords and categories
   const edges: Array<{ from: number; to: number }> = [];
-  const maxConnections = 15; // Limit connections per node
+  const maxConnections = 25; // Increased limit
   const connectionCounts = new Map<number, number>();
+  
+  // Helper to check keyword similarity (substring matching)
+  const keywordsSimilar = (k1: string, k2: string): boolean => {
+    const key1 = k1.toLowerCase();
+    const key2 = k2.toLowerCase();
+    return key1 === key2 || key1.includes(key2) || key2.includes(key1);
+  };
   
   for (let i = 0; i < nodes.length; i++) {
     const node1 = nodes[i];
@@ -40,19 +47,26 @@ const generateGraphData = () => {
       
       if (connectionsForNode2 >= maxConnections) continue;
       
-      // Check for shared keywords
+      // Check for shared keywords with fuzzy matching
       const sharedKeywords = node1.keywords.filter(k1 => 
-        node2.keywords.some(k2 => k1.toLowerCase() === k2.toLowerCase())
+        node2.keywords.some(k2 => keywordsSimilar(k1, k2))
       );
       
-      // Connect if:
-      // 1. They share 2+ keywords (strong connection)
-      // 2. They share 1 keyword and are in the same category
-      // 3. Same category with random probability
+      const sameCategory = node1.category === node2.category;
+      
+      // More permissive connection criteria:
+      // 1. Share 2+ keywords (any category)
+      // 2. Share 1+ keyword and same category
+      // 3. Same category with 40% probability
+      // 4. Different category but share "spaceflight", "space", "microgravity" keywords
+      const hasSpaceKeyword = (keywords: string[]) => 
+        keywords.some(k => ['spaceflight', 'space', 'microgravity', 'missions'].includes(k.toLowerCase()));
+      
       const shouldConnect = 
         sharedKeywords.length >= 2 ||
-        (sharedKeywords.length === 1 && node1.category === node2.category) ||
-        (node1.category === node2.category && Math.random() > 0.85);
+        (sharedKeywords.length >= 1 && sameCategory) ||
+        (sameCategory && Math.random() > 0.6) ||
+        (hasSpaceKeyword(node1.keywords) && hasSpaceKeyword(node2.keywords) && Math.random() > 0.7);
       
       if (shouldConnect) {
         edges.push({ from: node1.id, to: node2.id });
@@ -60,6 +74,31 @@ const generateGraphData = () => {
         connectionCounts.set(node2.id, (connectionCounts.get(node2.id) || 0) + 1);
         
         if ((connectionCounts.get(node1.id) || 0) >= maxConnections) break;
+      }
+    }
+  }
+  
+  // Ensure every node has at least 2 connections
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i];
+    const connections = connectionCounts.get(node.id) || 0;
+    
+    if (connections < 2) {
+      // Connect to nearest nodes by category or random
+      for (let j = 0; j < nodes.length && connections < 2; j++) {
+        if (i === j) continue;
+        
+        const otherNode = nodes[j];
+        const edgeExists = edges.some(e => 
+          (e.from === node.id && e.to === otherNode.id) ||
+          (e.from === otherNode.id && e.to === node.id)
+        );
+        
+        if (!edgeExists && (connectionCounts.get(otherNode.id) || 0) < maxConnections) {
+          edges.push({ from: node.id, to: otherNode.id });
+          connectionCounts.set(node.id, (connectionCounts.get(node.id) || 0) + 1);
+          connectionCounts.set(otherNode.id, (connectionCounts.get(otherNode.id) || 0) + 1);
+        }
       }
     }
   }
