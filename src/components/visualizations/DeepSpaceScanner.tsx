@@ -13,15 +13,17 @@ interface Props {
 
 export default function DeepSpaceScanner({ data }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [pingActive, setPingActive] = useState(false);
   const animationRef = useRef<number>();
-  const sweepAngleRef = useRef(0);
+  const pingTimeRef = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
     const resizeCanvas = () => {
@@ -39,62 +41,47 @@ export default function DeepSpaceScanner({ data }: Props) {
     const maxRadius = Math.min(centerX, centerY) - 60;
     const maxImpact = 100;
 
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const animate = (timestamp: number) => {
+      ctx.clearRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
 
-      sweepAngleRef.current += 0.02;
-
-      // Draw concentric grid circles
+      // Draw hexagonal grid
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      
+      // Draw concentric hexagons
       for (let i = 1; i <= 4; i++) {
         const radius = (maxRadius / 4) * i;
         ctx.beginPath();
-        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(112, 182, 246, 0.15)";
+        for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 3) {
+          const x = Math.cos(angle) * radius;
+          const y = Math.sin(angle) * radius;
+          if (angle === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        ctx.closePath();
+        ctx.strokeStyle = `rgba(112, 182, 246, ${0.08 + i * 0.02})`;
         ctx.lineWidth = 1;
         ctx.stroke();
-
-        // Draw impact scale labels
-        if (i < 4) {
-          ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
-          ctx.font = "10px 'Space Grotesk', sans-serif";
-          ctx.textAlign = "center";
-          ctx.fillText(`${(i * 25).toString()}`, centerX, centerY - radius - 5);
-        }
       }
 
       // Draw radial scan lines
       const angleStep = (Math.PI * 2) / data.length;
+      ctx.strokeStyle = "rgba(112, 182, 246, 0.1)";
+      ctx.lineWidth = 1;
       data.forEach((_, index) => {
-        const angle = index * angleStep - Math.PI / 2;
-        const endX = centerX + Math.cos(angle) * maxRadius;
-        const endY = centerY + Math.sin(angle) * maxRadius;
-
+        const angle = index * angleStep;
         ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.lineTo(endX, endY);
-        ctx.strokeStyle = "rgba(112, 182, 246, 0.15)";
-        ctx.lineWidth = 1;
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(angle) * maxRadius, Math.sin(angle) * maxRadius);
         ctx.stroke();
       });
 
-      // Draw radar sweep
-      const sweepGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, maxRadius);
-      sweepGradient.addColorStop(0, "rgba(112, 182, 246, 0.3)");
-      sweepGradient.addColorStop(0.5, "rgba(112, 182, 246, 0.15)");
-      sweepGradient.addColorStop(1, "rgba(112, 182, 246, 0)");
-
-      ctx.save();
-      ctx.translate(centerX, centerY);
-      ctx.rotate(sweepAngleRef.current);
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.arc(0, 0, maxRadius, 0, Math.PI / 3);
-      ctx.lineTo(0, 0);
-      ctx.fillStyle = sweepGradient;
-      ctx.fill();
       ctx.restore();
 
-      // Draw data points (energy pulses)
+      // Draw data points
       data.forEach((point, index) => {
         const angle = index * angleStep - Math.PI / 2;
         const distance = (point.impact / maxImpact) * maxRadius;
@@ -102,73 +89,71 @@ export default function DeepSpaceScanner({ data }: Props) {
         const y = centerY + Math.sin(angle) * distance;
 
         const isHovered = hoveredIndex === index;
-        const pointSize = isHovered ? 10 : 7;
-
-        // Pulsing glow effect
-        const pulseOffset = Math.sin(Date.now() / 500 + index) * 3;
+        const baseSize = 6;
+        const pointSize = isHovered ? baseSize * 1.5 : baseSize;
 
         // Outer glow
-        const glowGradient = ctx.createRadialGradient(x, y, 0, x, y, pointSize + pulseOffset + 5);
-        glowGradient.addColorStop(0, "rgba(236, 72, 153, 0.8)");
-        glowGradient.addColorStop(1, "rgba(236, 72, 153, 0)");
-
+        const glowGradient = ctx.createRadialGradient(x, y, 0, x, y, pointSize * 3);
+        glowGradient.addColorStop(0, "rgba(167, 139, 250, 0.6)");
+        glowGradient.addColorStop(1, "rgba(167, 139, 250, 0)");
+        
         ctx.beginPath();
-        ctx.arc(x, y, pointSize + pulseOffset + 5, 0, Math.PI * 2);
+        ctx.arc(x, y, pointSize * 3, 0, Math.PI * 2);
         ctx.fillStyle = glowGradient;
         ctx.fill();
 
         // Main point
-        const pointGradient = ctx.createRadialGradient(x, y, 0, x, y, pointSize);
-        pointGradient.addColorStop(0, "rgba(255, 255, 255, 1)");
-        pointGradient.addColorStop(0.3, "rgba(236, 72, 153, 1)");
-        pointGradient.addColorStop(1, "rgba(167, 139, 250, 0.5)");
-
         ctx.beginPath();
         ctx.arc(x, y, pointSize, 0, Math.PI * 2);
-        ctx.fillStyle = pointGradient;
+        ctx.fillStyle = isHovered ? "rgba(236, 72, 153, 1)" : "rgba(167, 139, 250, 0.9)";
+        ctx.shadowBlur = isHovered ? 15 : 8;
+        ctx.shadowColor = isHovered ? "rgba(236, 72, 153, 1)" : "rgba(167, 139, 250, 0.8)";
         ctx.fill();
+        ctx.shadowBlur = 0;
 
-        // Enhanced glow when hovered
-        if (isHovered) {
-          ctx.shadowBlur = 25;
-          ctx.shadowColor = "rgba(236, 72, 153, 1)";
-          ctx.beginPath();
-          ctx.arc(x, y, pointSize, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        }
-
-        // Draw category label outside the radar
-        const labelDistance = maxRadius + 25;
+        // Draw category labels
+        const labelDistance = maxRadius + 30;
         const labelX = centerX + Math.cos(angle) * labelDistance;
         const labelY = centerY + Math.sin(angle) * labelDistance;
-
-        ctx.fillStyle = isHovered ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.7)";
+        
+        ctx.fillStyle = isHovered ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.6)";
         ctx.font = isHovered ? "bold 11px 'Space Grotesk', sans-serif" : "10px 'Space Grotesk', sans-serif";
-        ctx.textAlign = angle > -Math.PI / 2 && angle < Math.PI / 2 ? "left" : "right";
+        ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(point.category, labelX, labelY);
       });
 
-      // Draw center point
+      // Draw center core
+      const coreGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 8);
+      coreGradient.addColorStop(0, "rgba(112, 182, 246, 1)");
+      coreGradient.addColorStop(1, "rgba(112, 182, 246, 0.2)");
+      
       ctx.beginPath();
-      ctx.arc(centerX, centerY, 5, 0, Math.PI * 2);
-      const centerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 5);
-      centerGradient.addColorStop(0, "rgba(112, 182, 246, 1)");
-      centerGradient.addColorStop(1, "rgba(112, 182, 246, 0.3)");
-      ctx.fillStyle = centerGradient;
+      ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
+      ctx.fillStyle = coreGradient;
       ctx.fill();
 
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    animate(0);
+
+    // Trigger ping every 4 seconds
+    const pingInterval = setInterval(() => {
+      setPingActive(true);
+      setTimeout(() => setPingActive(false), 2000);
+    }, 4000);
+
+    // Initial ping on mount
+    setPingActive(true);
+    setTimeout(() => setPingActive(false), 2000);
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+      clearInterval(pingInterval);
     };
   }, [data, hoveredIndex]);
 
@@ -199,7 +184,7 @@ export default function DeepSpaceScanner({ data }: Props) {
       const dy = y - pointY;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      if (dist < 15 && dist < minDistance) {
+      if (dist < 20 && dist < minDistance) {
         minDistance = dist;
         foundIndex = index;
       }
@@ -209,25 +194,77 @@ export default function DeepSpaceScanner({ data }: Props) {
   };
 
   return (
-    <div className="relative w-full h-full">
+    <div ref={containerRef} className="relative w-full h-full overflow-hidden">
+      {/* Scanline texture overlay */}
+      <div className="absolute inset-0 scanline-texture pointer-events-none opacity-30 z-10" />
+      
+      {/* Radar ping effect */}
+      {pingActive && (
+        <>
+          {/* Main ping ring */}
+          <div
+            className="absolute left-1/2 top-1/2 rounded-full pointer-events-none z-20"
+            style={{
+              width: '80px',
+              height: '80px',
+              border: '3px solid rgba(112, 182, 246, 0.8)',
+              boxShadow: '0 0 20px rgba(112, 182, 246, 0.8), inset 0 0 20px rgba(112, 182, 246, 0.4)',
+              animation: 'radarPing 2s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+            }}
+          />
+          
+          {/* Trailing ring */}
+          <div
+            className="absolute left-1/2 top-1/2 rounded-full pointer-events-none z-20"
+            style={{
+              width: '80px',
+              height: '80px',
+              border: '2px solid rgba(236, 72, 153, 0.6)',
+              boxShadow: '0 0 15px rgba(236, 72, 153, 0.6)',
+              animation: 'radarTrail 2s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards',
+            }}
+          />
+        </>
+      )}
+
+      {/* Glitch effect overlay */}
+      {pingActive && (
+        <div
+          className="absolute inset-0 pointer-events-none z-30"
+          style={{
+            animation: 'glitchFlicker 2s cubic-bezier(0.4, 0, 0.2, 1) 1.8s',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(112, 182, 246, 0.1) 48%, rgba(236, 72, 153, 0.1) 52%, transparent 100%)',
+          }}
+        />
+      )}
+
+      {/* Canvas for grid and data points */}
       <canvas
         ref={canvasRef}
-        className="w-full h-full cursor-crosshair"
+        className="w-full h-full cursor-crosshair relative z-0"
         style={{ width: "100%", height: "400px" }}
         onMouseMove={handleMouseMove}
         onMouseLeave={() => setHoveredIndex(null)}
       />
+
+      {/* Data readout */}
       {hoveredIndex !== null && (
-        <div className="absolute top-4 left-4 bg-card/90 backdrop-blur-sm border border-primary/30 rounded-lg px-4 py-3 animate-in fade-in slide-in-from-top-2">
-          <div className="text-xs text-muted-foreground mb-1">📡 SCAN DETECTED</div>
-          <div className="text-lg font-black mb-1" style={{ fontFamily: "var(--font-space)" }}>
+        <div 
+          className="absolute top-4 left-4 bg-card/95 backdrop-blur-md border border-primary/40 rounded-lg px-5 py-4 z-40 tech-corner"
+          style={{
+            boxShadow: '0 0 30px rgba(112, 182, 246, 0.3)',
+            animation: 'fadeInUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          }}
+        >
+          <div className="text-xs text-primary mb-1 font-mono tracking-wider">📡 TARGET ACQUIRED</div>
+          <div className="text-xl font-black mb-2 gradient-text" style={{ fontFamily: "var(--font-space)" }}>
             {data[hoveredIndex].category}
           </div>
           <div className="flex items-baseline gap-2">
-            <div className="text-3xl font-bold text-primary">
+            <div className="text-4xl font-bold text-accent">
               {data[hoveredIndex].impact}
             </div>
-            <div className="text-sm text-muted-foreground">Impact Score</div>
+            <div className="text-sm text-muted-foreground font-mono">IMPACT</div>
           </div>
         </div>
       )}
