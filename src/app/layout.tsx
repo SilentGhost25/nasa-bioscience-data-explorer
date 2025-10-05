@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-import PageTransition from "@/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "NASA Biospace - Interactive Research Dashboard",
@@ -15,12 +13,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <PageTransition>
-          {children}
-        </PageTransition>
+      <body className="antialiased">
+        {children}
       </body>
     </html>
   );

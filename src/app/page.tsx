@@ -8,15 +8,11 @@ import { Rocket, Search, BarChart3, Gamepad2, Sparkles, Database } from "lucide-
 import StarField from "@/components/StarField";
 import NasaLiveFeed from "@/components/NasaLiveFeed";
 import Navigation from "@/components/Navigation";
-import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);
-
-  // Enable smooth scrolling
-  useSmoothScroll();
 
   useEffect(() => {
     const handleScroll = () => {
