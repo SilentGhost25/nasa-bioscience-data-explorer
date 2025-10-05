@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { publications } from "@/data/publications";
 
+/**
+ * GET /api/nasa/research
+ * Fetches NASA bioscience publications with optional filters
+ */
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
