@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { nasaPublications } from "@/data/publications";
+import { publications } from "@/data/publications";
 
 export async function GET(request: Request) {
   try {
@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     const year = searchParams.get("year");
     const search = searchParams.get("search");
 
-    let filtered = nasaPublications;
+    let filtered = publications;
 
     // Apply filters
     if (category && category !== "all") {
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     }
 
     return NextResponse.json({
-      total: nasaPublications.length,
+      total: publications.length,
       filtered: filtered.length,
       publications: filtered,
     });
