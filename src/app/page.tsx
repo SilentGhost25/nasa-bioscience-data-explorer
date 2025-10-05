@@ -47,12 +47,12 @@ export default function Home() {
       <StarField />
       <Navigation />
       
-      {/* Hero Background Image with Parallax - NEW HIGH RES */}
+      {/* Hero Background Image with Parallax - Earth from Space */}
       <div 
         className="fixed inset-0 z-0"
         style={{
           transform: `translateY(${scrollY * 0.3}px) scale(${1 + scrollY * 0.0002})`,
-          backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/6ccab27e-f814-4c07-ba08-c5df566de7b7/generated_images/epic-ultra-high-resolution-deep-space-sc-3aa2a98c-20251005053750.jpg?')",
+          backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/document-uploads/image-1759643333388.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
