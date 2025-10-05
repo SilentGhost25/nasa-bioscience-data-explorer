@@ -1,3 +1,6 @@
+/* Updated: 2025-10-05T05:31:05.056Z */
+/* Updated: 2025-10-05T05:29:21.903Z */
+/* Updated: 2025-10-05T04:09:54.964Z */
 /* Updated: 2025-10-05T04:02:57.248Z */
 /* Updated: 2025-10-05T03:41:45.989Z */
 /* Updated: 2025-10-04T17:57:15.463Z */
@@ -150,6 +153,11 @@
     @apply bg-background text-foreground;
     font-family: var(--font-body);
     overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+  
+  html {
+    scroll-behavior: smooth;
   }
   
   @keyframes twinkle {
@@ -271,6 +279,19 @@
     100% {
       background-position: 0 100%;
     }
+  }
+  
+  @keyframes scan {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100vh);
+    }
+  }
+  
+  .animate-scan {
+    animation: scan 0.25s ease-out;
   }
   
   .glow {
