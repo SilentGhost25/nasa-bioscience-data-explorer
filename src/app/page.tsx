@@ -8,6 +8,7 @@ import { Rocket, Search, BarChart3, Gamepad2, Sparkles, Database } from "lucide-
 import StarField from "@/components/StarField";
 import NasaLiveFeed from "@/components/NasaLiveFeed";
 import Navigation from "@/components/Navigation";
+import { SpaceCarousel } from "@/components/SpaceCarousel";
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
@@ -271,6 +272,11 @@ export default function Home() {
           </div>
         </section>
       </div>
+
+      {/* 3D Space Carousel Section */}
+      <section className="relative z-10">
+        <SpaceCarousel />
+      </section>
     </>
   );
 }

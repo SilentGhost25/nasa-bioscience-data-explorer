@@ -1,3 +1,12 @@
+/* Updated: 2025-10-05T06:39:43.761Z */
+/* Updated: 2025-10-05T06:36:14.912Z */
+/* Updated: 2025-10-05T06:29:46.978Z */
+/* Updated: 2025-10-05T06:16:41.443Z */
+/* Updated: 2025-10-05T06:14:14.259Z */
+/* Updated: 2025-10-05T06:13:25.028Z */
+/* Updated: 2025-10-05T06:11:00.396Z */
+/* Updated: 2025-10-05T06:09:21.340Z */
+/* Updated: 2025-10-05T06:08:34.782Z */
 /* Updated: 2025-10-05T05:55:29.192Z */
 /* Updated: 2025-10-05T05:51:05.852Z */
 /* Updated: 2025-10-05T05:49:57.300Z */
@@ -305,6 +314,15 @@
     }
     100% {
       background-position: 0% 0%;
+    }
+  }
+  
+  @keyframes carouselRotate {
+    from {
+      transform: perspective(1000px) rotateX(-16deg) rotateY(0deg);
+    }
+    to {
+      transform: perspective(1000px) rotateX(-16deg) rotateY(360deg);
     }
   }
   
