@@ -47,31 +47,59 @@ export default function Home() {
       <StarField />
       <Navigation />
       
-      {/* Hero Background Image with Parallax - Earth from Space */}
+      {/* Earth Orbital View Background with Slow Drift */}
       <div 
-        className="fixed inset-0 z-0"
+        className="fixed inset-0 z-0 orbital-background"
         style={{
           transform: `translateY(${scrollY * 0.3}px) scale(${1 + scrollY * 0.0002})`,
           backgroundImage: "url('https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/document-uploads/image-1759643333388.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          opacity: 0.4,
+          willChange: "transform, background-position",
         }}
       />
       
-      {/* Nebula Overlay with Parallax */}
+      {/* Atmospheric Gradient Overlay */}
       <div 
-        className="fixed inset-0 z-0 parallax-slow"
+        className="fixed inset-0 z-0 pointer-events-none"
         style={{
-          transform: `translateY(${scrollY * 0.5}px)`,
-          background: "radial-gradient(ellipse at 20% 30%, rgba(100, 200, 255, 0.2) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(200, 100, 255, 0.2) 0%, transparent 50%)",
+          background: `
+            radial-gradient(circle at 50% 50%, transparent 30%, rgba(10, 14, 39, 0.3) 60%, rgba(10, 14, 39, 0.8) 100%),
+            linear-gradient(180deg, rgba(10, 14, 39, 0.6) 0%, transparent 30%, transparent 70%, rgba(10, 14, 39, 0.6) 100%)
+          `,
         }}
       />
       
+      {/* Earth Glow Effect - Cyan/Magenta Atmospheric Ring */}
+      <div 
+        className="fixed inset-0 z-0 pointer-events-none"
+        style={{
+          transform: `translateY(${scrollY * 0.4}px)`,
+          background: `
+            radial-gradient(ellipse 60% 40% at 50% 50%, 
+              transparent 35%, 
+              rgba(0, 212, 255, 0.15) 45%, 
+              rgba(107, 92, 231, 0.15) 50%,
+              transparent 60%
+            )
+          `,
+          filter: 'blur(40px)',
+        }}
+      />
+      
+      {/* Content Contrast Overlay - Semi-transparent Dark Background */}
       <div className="relative z-10 min-h-screen pt-16">
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'rgba(10, 14, 39, 0.5)',
+            backdropFilter: 'blur(2px)',
+          }}
+        />
+        
         {/* Hero Section */}
-        <section className="container mx-auto px-4 py-20 relative">
+        <section className="container mx-auto px-4 py-20 relative z-10">
           <div 
             ref={heroRef}
             className="max-w-4xl mx-auto text-center relative"
@@ -91,7 +119,8 @@ export default function Home() {
               className="text-6xl md:text-8xl font-black mb-6 gradient-text glow-text relative"
               style={{ 
                 fontFamily: "var(--font-space)",
-                letterSpacing: "0.1em"
+                letterSpacing: "0.1em",
+                textShadow: '0 0 30px rgba(0, 212, 255, 0.5), 0 0 60px rgba(107, 92, 231, 0.3)'
               }}
             >
               NASA BIOSPACE
@@ -99,13 +128,13 @@ export default function Home() {
             
             <div className="h-1 w-48 mx-auto mb-8 bg-gradient-to-r from-transparent via-primary to-transparent glow" />
             
-            <p className="text-xl md:text-2xl text-foreground/90 mb-8 font-light tracking-wide">
+            <p className="text-xl md:text-2xl text-foreground mb-8 font-light tracking-wide drop-shadow-lg">
               Explore <span className="text-primary font-bold">608</span> NASA Bioscience Publications
             </p>
-            <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg text-foreground/90 mb-12 max-w-2xl mx-auto leading-relaxed drop-shadow-lg">
               Through AI-Powered Interactive Dashboard
             </p>
-            <p className="text-base text-muted-foreground/80 mb-16 max-w-2xl mx-auto">
+            <p className="text-base text-foreground/80 mb-16 max-w-2xl mx-auto drop-shadow-lg">
               Discover decades of space biology research, identify knowledge gaps, 
               and explore scientific progress through interactive visualizations, 
               games, and real-time NASA data.
@@ -121,7 +150,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/visualizations">
-                <Button size="lg" variant="outline" className="text-lg px-8 holographic-border group">
+                <Button size="lg" variant="outline" className="text-lg px-8 holographic-border group backdrop-blur-sm">
                   <BarChart3 className="mr-2 h-5 w-5 group-hover:text-primary transition-colors" />
                   View Data
                 </Button>
@@ -129,12 +158,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Feature Cards with Power-On Animation */}
+          {/* Feature Cards with Enhanced Contrast */}
           <div 
             ref={(el) => (sectionsRef.current[0] = el)}
             className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-20"
           >
-            <Card className="p-6 bg-card backdrop-blur-md holographic-border group hover:scale-105 transition-all duration-300 tech-corner">
+            <Card className="p-6 backdrop-blur-lg holographic-border group hover:scale-105 transition-all duration-300 tech-corner"
+                  style={{ background: 'rgba(10, 14, 39, 0.85)' }}>
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/5 blur-xl group-hover:blur-2xl transition-all" />
                 <Search className="h-12 w-12 text-primary mb-4 relative z-10 group-hover:drop-shadow-[0_0_15px_rgba(100,200,255,0.8)] transition-all" />
@@ -147,7 +177,8 @@ export default function Home() {
               </p>
             </Card>
 
-            <Card className="p-6 bg-card backdrop-blur-md holographic-border group hover:scale-105 transition-all duration-300 tech-corner">
+            <Card className="p-6 backdrop-blur-lg holographic-border group hover:scale-105 transition-all duration-300 tech-corner"
+                  style={{ background: 'rgba(10, 14, 39, 0.85)' }}>
               <div className="relative">
                 <div className="absolute inset-0 bg-accent/5 blur-xl group-hover:blur-2xl transition-all" />
                 <BarChart3 className="h-12 w-12 text-accent mb-4 relative z-10 group-hover:drop-shadow-[0_0_15px_rgba(200,100,255,0.8)] transition-all" />
@@ -160,7 +191,8 @@ export default function Home() {
               </p>
             </Card>
 
-            <Card className="p-6 bg-card backdrop-blur-md holographic-border group hover:scale-105 transition-all duration-300 tech-corner">
+            <Card className="p-6 backdrop-blur-lg holographic-border group hover:scale-105 transition-all duration-300 tech-corner"
+                  style={{ background: 'rgba(10, 14, 39, 0.85)' }}>
               <div className="relative">
                 <div className="absolute inset-0 bg-nebula/5 blur-xl group-hover:blur-2xl transition-all" />
                 <Gamepad2 className="h-12 w-12 text-nebula mb-4 relative z-10 group-hover:drop-shadow-[0_0_15px_rgba(200,255,100,0.8)] transition-all" />
@@ -174,12 +206,13 @@ export default function Home() {
             </Card>
           </div>
 
-          {/* Stats Section with Staggered Power-On */}
+          {/* Stats Section with Enhanced Contrast */}
           <div 
             ref={(el) => (sectionsRef.current[1] = el)}
             className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto mb-20"
           >
-            <Card className="p-6 bg-gradient-to-br from-primary/10 via-card to-card backdrop-blur-md holographic-border text-center group hover:scale-105 transition-all tech-corner">
+            <Card className="p-6 backdrop-blur-lg holographic-border text-center group hover:scale-105 transition-all tech-corner"
+                  style={{ background: 'linear-gradient(135deg, rgba(100, 200, 255, 0.15), rgba(10, 14, 39, 0.85))' }}>
               <Database className="h-10 w-10 text-primary mx-auto mb-3 group-hover:drop-shadow-[0_0_20px_rgba(100,200,255,1)] transition-all" />
               <div className="text-5xl font-black text-primary mb-2" style={{ fontFamily: "var(--font-space)" }}>
                 608
@@ -188,7 +221,8 @@ export default function Home() {
               <div className="h-0.5 w-12 mx-auto mt-2 bg-gradient-to-r from-transparent via-primary to-transparent" />
             </Card>
 
-            <Card className="p-6 bg-gradient-to-br from-accent/10 via-card to-card backdrop-blur-md holographic-border text-center group hover:scale-105 transition-all tech-corner">
+            <Card className="p-6 backdrop-blur-lg holographic-border text-center group hover:scale-105 transition-all tech-corner"
+                  style={{ background: 'linear-gradient(135deg, rgba(200, 100, 255, 0.15), rgba(10, 14, 39, 0.85))' }}>
               <Sparkles className="h-10 w-10 text-accent mx-auto mb-3 group-hover:drop-shadow-[0_0_20px_rgba(200,100,255,1)] transition-all" />
               <div className="text-5xl font-black text-accent mb-2" style={{ fontFamily: "var(--font-space)" }}>
                 40+
@@ -197,7 +231,8 @@ export default function Home() {
               <div className="h-0.5 w-12 mx-auto mt-2 bg-gradient-to-r from-transparent via-accent to-transparent" />
             </Card>
 
-            <Card className="p-6 bg-gradient-to-br from-nebula/10 via-card to-card backdrop-blur-md holographic-border text-center group hover:scale-105 transition-all tech-corner">
+            <Card className="p-6 backdrop-blur-lg holographic-border text-center group hover:scale-105 transition-all tech-corner"
+                  style={{ background: 'linear-gradient(135deg, rgba(200, 255, 100, 0.15), rgba(10, 14, 39, 0.85))' }}>
               <Rocket className="h-10 w-10 text-nebula mx-auto mb-3 group-hover:drop-shadow-[0_0_20px_rgba(200,255,100,1)] transition-all" />
               <div className="text-5xl font-black text-nebula mb-2" style={{ fontFamily: "var(--font-space)" }}>
                 100+
@@ -206,7 +241,8 @@ export default function Home() {
               <div className="h-0.5 w-12 mx-auto mt-2 bg-gradient-to-r from-transparent via-nebula to-transparent" />
             </Card>
 
-            <Card className="p-6 bg-gradient-to-br from-space-purple/10 via-card to-card backdrop-blur-md holographic-border text-center group hover:scale-105 transition-all tech-corner">
+            <Card className="p-6 backdrop-blur-lg holographic-border text-center group hover:scale-105 transition-all tech-corner"
+                  style={{ background: 'linear-gradient(135deg, rgba(150, 100, 200, 0.15), rgba(10, 14, 39, 0.85))' }}>
               <BarChart3 className="h-10 w-10 mx-auto mb-3 group-hover:drop-shadow-[0_0_20px_rgba(150,100,200,1)] transition-all" style={{ color: "var(--color-space-purple)" }} />
               <div className="text-5xl font-black mb-2" style={{ fontFamily: "var(--font-space)", color: "var(--color-space-purple)" }}>
                 AI
@@ -216,13 +252,17 @@ export default function Home() {
             </Card>
           </div>
 
-          {/* NASA Live Feed */}
+          {/* NASA Live Feed with Enhanced Contrast */}
           <div 
             ref={(el) => (sectionsRef.current[2] = el)}
             className="max-w-4xl mx-auto"
           >
             <div className="text-center mb-8">
-              <h2 className="text-4xl font-bold mb-4 gradient-text tracking-wider" style={{ fontFamily: "var(--font-space)" }}>
+              <h2 className="text-4xl font-bold mb-4 gradient-text tracking-wider" 
+                  style={{ 
+                    fontFamily: "var(--font-space)",
+                    textShadow: '0 0 30px rgba(0, 212, 255, 0.5)'
+                  }}>
                 LIVE FROM NASA
               </h2>
               <div className="h-1 w-32 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent glow" />
