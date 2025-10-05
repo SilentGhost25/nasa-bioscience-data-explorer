@@ -67,6 +67,13 @@ const knowledgeGaps = [
 
 export default function VisualizationsPage() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [isTabSwitching, setIsTabSwitching] = useState(false);
+
+  const handleTabChange = (value: string) => {
+    setIsTabSwitching(true);
+    setActiveTab(value);
+    setTimeout(() => setIsTabSwitching(false), 300);
+  };
 
   return (
     <>
@@ -90,29 +97,104 @@ export default function VisualizationsPage() {
           </div>
 
           {/* Tabs */}
-          <div className="max-w-7xl mx-auto">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="mb-6 w-full lg:w-auto holographic-border">
-                <TabsTrigger value="overview">
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  Overview
+          <div className="max-w-7xl mx-auto relative z-20">
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+              <TabsList className="mb-6 w-full lg:w-auto relative z-30 bg-card/50 backdrop-blur-xl border border-primary/30 p-2 h-auto gap-2 rounded-xl shadow-[0_0_30px_rgba(112,182,246,0.15)]">
+                <TabsTrigger 
+                  value="overview"
+                  className="
+                    min-h-[48px] px-6 py-3 font-semibold tracking-wide
+                    data-[state=active]:bg-primary/20 
+                    data-[state=active]:text-primary
+                    data-[state=active]:border-primary/50
+                    data-[state=active]:shadow-[0_0_20px_rgba(112,182,246,0.4),inset_0_0_20px_rgba(112,182,246,0.1)]
+                    data-[state=inactive]:text-muted-foreground
+                    data-[state=inactive]:hover:text-foreground
+                    data-[state=inactive]:hover:bg-primary/5
+                    border border-transparent
+                    transition-all duration-300
+                    rounded-lg
+                    tech-corner
+                  "
+                  style={{ fontFamily: "var(--font-space)" }}
+                >
+                  <BarChart3 className="h-5 w-5 mr-2" />
+                  OVERVIEW
                 </TabsTrigger>
-                <TabsTrigger value="trends">
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  Trends
+                <TabsTrigger 
+                  value="trends"
+                  className="
+                    min-h-[48px] px-6 py-3 font-semibold tracking-wide
+                    data-[state=active]:bg-primary/20 
+                    data-[state=active]:text-primary
+                    data-[state=active]:border-primary/50
+                    data-[state=active]:shadow-[0_0_20px_rgba(112,182,246,0.4),inset_0_0_20px_rgba(112,182,246,0.1)]
+                    data-[state=inactive]:text-muted-foreground
+                    data-[state=inactive]:hover:text-foreground
+                    data-[state=inactive]:hover:bg-primary/5
+                    border border-transparent
+                    transition-all duration-300
+                    rounded-lg
+                    tech-corner
+                  "
+                  style={{ fontFamily: "var(--font-space)" }}
+                >
+                  <TrendingUp className="h-5 w-5 mr-2" />
+                  TRENDS
                 </TabsTrigger>
-                <TabsTrigger value="impact">
-                  <PieChart className="h-4 w-4 mr-2" />
-                  Impact
+                <TabsTrigger 
+                  value="impact"
+                  className="
+                    min-h-[48px] px-6 py-3 font-semibold tracking-wide
+                    data-[state=active]:bg-primary/20 
+                    data-[state=active]:text-primary
+                    data-[state=active]:border-primary/50
+                    data-[state=active]:shadow-[0_0_20px_rgba(112,182,246,0.4),inset_0_0_20px_rgba(112,182,246,0.1)]
+                    data-[state=inactive]:text-muted-foreground
+                    data-[state=inactive]:hover:text-foreground
+                    data-[state=inactive]:hover:bg-primary/5
+                    border border-transparent
+                    transition-all duration-300
+                    rounded-lg
+                    tech-corner
+                  "
+                  style={{ fontFamily: "var(--font-space)" }}
+                >
+                  <PieChart className="h-5 w-5 mr-2" />
+                  IMPACT
                 </TabsTrigger>
-                <TabsTrigger value="gaps">
-                  <Network className="h-4 w-4 mr-2" />
-                  Knowledge Gaps
+                <TabsTrigger 
+                  value="gaps"
+                  className="
+                    min-h-[48px] px-6 py-3 font-semibold tracking-wide
+                    data-[state=active]:bg-primary/20 
+                    data-[state=active]:text-primary
+                    data-[state=active]:border-primary/50
+                    data-[state=active]:shadow-[0_0_20px_rgba(112,182,246,0.4),inset_0_0_20px_rgba(112,182,246,0.1)]
+                    data-[state=inactive]:text-muted-foreground
+                    data-[state=inactive]:hover:text-foreground
+                    data-[state=inactive]:hover:bg-primary/5
+                    border border-transparent
+                    transition-all duration-300
+                    rounded-lg
+                    tech-corner
+                  "
+                  style={{ fontFamily: "var(--font-space)" }}
+                >
+                  <Network className="h-5 w-5 mr-2" />
+                  KNOWLEDGE GAPS
                 </TabsTrigger>
               </TabsList>
 
+              {/* Data Stream Loading Effect */}
+              {isTabSwitching && (
+                <div className="mb-4 overflow-hidden rounded-lg h-1 bg-muted/20">
+                  <div className="h-full bg-gradient-to-r from-transparent via-primary to-transparent animate-[slideIn_0.3s_ease-out]" />
+                </div>
+              )}
+
               {/* Overview Tab */}
-              <TabsContent value="overview" className="space-y-6">
+              <TabsContent value="overview" className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="grid md:grid-cols-2 gap-6">
                   <Card 
                     className="p-6 bg-card/30 backdrop-blur-md border-primary/20 hover:border-primary/40 transition-all duration-500 tech-corner power-on"
@@ -155,7 +237,7 @@ export default function VisualizationsPage() {
               </TabsContent>
 
               {/* Trends Tab */}
-              <TabsContent value="trends" className="space-y-6">
+              <TabsContent value="trends" className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <Card 
                   className="p-6 bg-card/30 backdrop-blur-md border-primary/20 hover:border-primary/40 transition-all duration-500 tech-corner power-on"
                   style={{
@@ -273,7 +355,7 @@ export default function VisualizationsPage() {
               </TabsContent>
 
               {/* Impact Tab */}
-              <TabsContent value="impact" className="space-y-6">
+              <TabsContent value="impact" className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="grid md:grid-cols-3 gap-6">
                   <Card 
                     className="p-6 bg-gradient-to-br from-primary/20 to-primary/5 backdrop-blur-md border-primary/30 hover:scale-105 transition-all duration-300 cursor-pointer tech-corner power-on"
@@ -355,7 +437,7 @@ export default function VisualizationsPage() {
               </TabsContent>
 
               {/* Knowledge Gaps Tab */}
-              <TabsContent value="gaps" className="space-y-6">
+              <TabsContent value="gaps" className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <Card className="p-6 bg-card/30 backdrop-blur-md border-primary/20">
                   <h3 className="text-xl font-bold mb-4 tracking-wider" style={{ fontFamily: "var(--font-space)" }}>
                     Identified Knowledge Gaps
