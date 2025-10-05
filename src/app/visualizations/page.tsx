@@ -6,27 +6,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart3, PieChart, TrendingUp, Network } from "lucide-react";
 import StarField from "@/components/StarField";
 import Navigation from "@/components/Navigation";
+import RocketLaunchChart from "@/components/visualizations/RocketLaunchChart";
+import OrbitalRingSystem from "@/components/visualizations/OrbitalRingSystem";
+import DeepSpaceScanner from "@/components/visualizations/DeepSpaceScanner";
+import DataStreamBackground from "@/components/visualizations/DataStreamBackground";
 import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  PieChart as RePieChart,
-  Pie,
-  Cell,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-  Area,
-  AreaChart,
 } from "recharts";
 
 // Mock data for visualizations
@@ -75,13 +67,11 @@ const knowledgeGaps = [
 
 export default function VisualizationsPage() {
   const [activeTab, setActiveTab] = useState("overview");
-  const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
-  const [activePieIndex, setActivePieIndex] = useState<number | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   return (
     <>
       <StarField />
+      <DataStreamBackground />
       <Navigation />
 
       <div className="relative z-10 min-h-screen pt-24 pb-12">
@@ -89,20 +79,20 @@ export default function VisualizationsPage() {
           {/* Header */}
           <div className="max-w-7xl mx-auto mb-8">
             <h1
-              className="text-5xl font-black mb-4 gradient-text"
+              className="text-5xl font-black mb-4 gradient-text tracking-wider"
               style={{ fontFamily: "var(--font-space)" }}
             >
-              Data Visualizations
+              ⚡ COMMAND CENTER
             </h1>
-            <p className="text-lg text-muted-foreground">
-              Interactive charts and knowledge graphs revealing trends, gaps, and insights
+            <p className="text-lg text-muted-foreground font-mono">
+              Real-time cosmic data analysis and mission intelligence
             </p>
           </div>
 
           {/* Tabs */}
           <div className="max-w-7xl mx-auto">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="mb-6 grid w-full grid-cols-4 lg:w-auto">
+              <TabsList className="mb-6 grid w-full grid-cols-4 lg:w-auto holographic-border">
                 <TabsTrigger value="overview">
                   <BarChart3 className="h-4 w-4 mr-2" />
                   Overview
@@ -125,171 +115,55 @@ export default function VisualizationsPage() {
               <TabsContent value="overview" className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <Card 
-                    className="p-6 bg-card/50 backdrop-blur-sm border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-[1.02]"
+                    className="p-6 bg-card/30 backdrop-blur-md border-primary/20 hover:border-primary/40 transition-all duration-500 tech-corner power-on"
                     style={{
-                      transform: 'perspective(1000px) rotateX(2deg)',
-                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+                      boxShadow: '0 0 30px rgba(112, 182, 246, 0.1), inset 0 0 30px rgba(112, 182, 246, 0.05)',
                     }}
                   >
-                    <h3 className="text-xl font-bold mb-4" style={{ fontFamily: "var(--font-space)" }}>
-                      Publications by Year
+                    <h3 className="text-xl font-bold mb-4 tracking-wider flex items-center gap-2" style={{ fontFamily: "var(--font-space)" }}>
+                      <span className="text-primary">🚀</span> LAUNCH TRAJECTORY
                     </h3>
-                    {activeBarIndex !== null && (
-                      <div className="mb-2 text-sm text-primary animate-in fade-in slide-in-from-top-2">
-                        📊 {publicationsByYear[activeBarIndex].year}: {publicationsByYear[activeBarIndex].count} publications
-                      </div>
-                    )}
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart 
-                        data={publicationsByYear}
-                        onMouseLeave={() => setActiveBarIndex(null)}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-                        <XAxis dataKey="year" stroke="var(--color-muted-foreground)" />
-                        <YAxis stroke="var(--color-muted-foreground)" />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "var(--color-card)",
-                            border: "1px solid var(--color-border)",
-                            borderRadius: "8px",
-                          }}
-                          cursor={{ fill: 'var(--color-primary)', opacity: 0.1 }}
-                        />
-                        <Bar 
-                          dataKey="count" 
-                          fill="var(--color-primary)" 
-                          radius={[8, 8, 0, 0]}
-                          animationBegin={0}
-                          animationDuration={1500}
-                          animationEasing="ease-out"
-                          onMouseEnter={(_, index) => setActiveBarIndex(index)}
-                          style={{
-                            filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))',
-                            cursor: 'pointer',
-                          }}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
+                    <RocketLaunchChart data={publicationsByYear} />
                   </Card>
 
                   <Card 
-                    className="p-6 bg-card/50 backdrop-blur-sm border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-[1.02]"
+                    className="p-6 bg-card/30 backdrop-blur-md border-accent/20 hover:border-accent/40 transition-all duration-500 tech-corner power-on"
                     style={{
-                      transform: 'perspective(1000px) rotateX(2deg)',
-                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+                      boxShadow: '0 0 30px rgba(167, 139, 250, 0.1), inset 0 0 30px rgba(167, 139, 250, 0.05)',
+                      animationDelay: '0.1s',
                     }}
                   >
-                    <h3 className="text-xl font-bold mb-4" style={{ fontFamily: "var(--font-space)" }}>
-                      Publications by Category (3D)
+                    <h3 className="text-xl font-bold mb-4 tracking-wider flex items-center gap-2" style={{ fontFamily: "var(--font-space)" }}>
+                      <span className="text-accent">🛸</span> ORBITAL SECTORS
                     </h3>
-                    {selectedCategory && (
-                      <div className="mb-2 text-sm text-accent animate-in fade-in slide-in-from-top-2">
-                        🔬 {selectedCategory}
-                      </div>
-                    )}
-                    <ResponsiveContainer width="100%" height={300}>
-                      <RePieChart>
-                        <Pie
-                          data={publicationsByCategory}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                          outerRadius={activePieIndex !== null ? 85 : 80}
-                          innerRadius={activePieIndex !== null ? 50 : 45}
-                          fill="#8884d8"
-                          dataKey="value"
-                          animationBegin={0}
-                          animationDuration={1500}
-                          animationEasing="ease-out"
-                          onMouseEnter={(_, index) => {
-                            setActivePieIndex(index);
-                            setSelectedCategory(publicationsByCategory[index].name);
-                          }}
-                          onMouseLeave={() => {
-                            setActivePieIndex(null);
-                            setSelectedCategory(null);
-                          }}
-                          style={{
-                            cursor: 'pointer',
-                            filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5))',
-                          }}
-                        >
-                          {publicationsByCategory.map((entry, index) => (
-                            <Cell 
-                              key={`cell-${index}`} 
-                              fill={entry.color}
-                              style={{
-                                transform: activePieIndex === index ? 'scale(1.05)' : 'scale(1)',
-                                transformOrigin: 'center',
-                                transition: 'all 0.3s ease',
-                              }}
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "var(--color-card)",
-                            border: "1px solid var(--color-border)",
-                            borderRadius: "8px",
-                          }}
-                        />
-                      </RePieChart>
-                    </ResponsiveContainer>
+                    <OrbitalRingSystem data={publicationsByCategory} />
                   </Card>
                 </div>
 
                 <Card 
-                  className="p-6 bg-card/50 backdrop-blur-sm border-primary/20 hover:border-primary/40 transition-all duration-300"
+                  className="p-6 bg-card/30 backdrop-blur-md border-primary/20 hover:border-primary/40 transition-all duration-500 tech-corner power-on"
                   style={{
-                    transform: 'perspective(1000px) rotateX(1deg)',
-                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+                    boxShadow: '0 0 30px rgba(112, 182, 246, 0.1), inset 0 0 30px rgba(112, 182, 246, 0.05)',
+                    animationDelay: '0.2s',
                   }}
                 >
-                  <h3 className="text-xl font-bold mb-4" style={{ fontFamily: "var(--font-space)" }}>
-                    Research Impact by Area (Radar)
+                  <h3 className="text-xl font-bold mb-4 tracking-wider flex items-center gap-2" style={{ fontFamily: "var(--font-space)" }}>
+                    <span className="text-primary">📡</span> DEEP SPACE SCANNER
                   </h3>
-                  <ResponsiveContainer width="100%" height={400}>
-                    <RadarChart data={researchImpact}>
-                      <PolarGrid stroke="var(--color-border)" />
-                      <PolarAngleAxis dataKey="category" stroke="var(--color-muted-foreground)" />
-                      <PolarRadiusAxis stroke="var(--color-muted-foreground)" />
-                      <Radar
-                        name="Impact Score"
-                        dataKey="impact"
-                        stroke="var(--color-primary)"
-                        fill="var(--color-primary)"
-                        fillOpacity={0.6}
-                        animationBegin={0}
-                        animationDuration={1500}
-                        animationEasing="ease-out"
-                        style={{
-                          filter: 'drop-shadow(0 0 10px var(--color-primary))',
-                        }}
-                      />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "var(--color-card)",
-                          border: "1px solid var(--color-border)",
-                          borderRadius: "8px",
-                        }}
-                      />
-                    </RadarChart>
-                  </ResponsiveContainer>
+                  <DeepSpaceScanner data={researchImpact} />
                 </Card>
               </TabsContent>
 
               {/* Trends Tab */}
               <TabsContent value="trends" className="space-y-6">
                 <Card 
-                  className="p-6 bg-card/50 backdrop-blur-sm border-primary/20 hover:border-primary/40 transition-all duration-300"
+                  className="p-6 bg-card/30 backdrop-blur-md border-primary/20 hover:border-primary/40 transition-all duration-500 tech-corner power-on"
                   style={{
-                    transform: 'perspective(1000px) rotateX(1deg)',
-                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+                    boxShadow: '0 0 30px rgba(112, 182, 246, 0.1), inset 0 0 30px rgba(112, 182, 246, 0.05)',
                   }}
                 >
-                  <h3 className="text-xl font-bold mb-4" style={{ fontFamily: "var(--font-space)" }}>
-                    Citation Trends Over Time (Area Chart)
+                  <h3 className="text-xl font-bold mb-4 tracking-wider flex items-center gap-2" style={{ fontFamily: "var(--font-space)" }}>
+                    <span className="text-accent">📈</span> CITATION ENERGY FIELD
                   </h3>
                   <ResponsiveContainer width="100%" height={400}>
                     <AreaChart data={citationTrends}>
@@ -299,14 +173,15 @@ export default function VisualizationsPage() {
                           <stop offset="95%" stopColor="var(--color-accent)" stopOpacity={0.1}/>
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-                      <XAxis dataKey="year" stroke="var(--color-muted-foreground)" />
-                      <YAxis stroke="var(--color-muted-foreground)" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.2} />
+                      <XAxis dataKey="year" stroke="var(--color-muted-foreground)" style={{ fontFamily: 'Space Grotesk' }} />
+                      <YAxis stroke="var(--color-muted-foreground)" style={{ fontFamily: 'Space Grotesk' }} />
                       <Tooltip
                         contentStyle={{
                           backgroundColor: "var(--color-card)",
                           border: "1px solid var(--color-border)",
                           borderRadius: "8px",
+                          backdropFilter: "blur(8px)",
                         }}
                         cursor={{ stroke: 'var(--color-accent)', strokeWidth: 2 }}
                       />
@@ -337,14 +212,16 @@ export default function VisualizationsPage() {
                       />
                     </AreaChart>
                   </ResponsiveContainer>
-                  <p className="text-sm text-muted-foreground mt-4">
+                  <p className="text-sm text-muted-foreground mt-4 font-mono">
                     📈 Citations have increased by 240% since 2018, indicating growing research interest and impact.
                   </p>
                 </Card>
 
                 <div className="grid md:grid-cols-2 gap-6">
-                  <Card className="p-6 bg-card/50 backdrop-blur-sm border-accent/20 hover:scale-[1.02] transition-transform duration-300">
-                    <h3 className="text-lg font-bold mb-4">Emerging Research Areas</h3>
+                  <Card className="p-6 bg-card/30 backdrop-blur-md border-accent/20 hover:scale-[1.02] transition-transform duration-300 tech-corner power-on">
+                    <h3 className="text-lg font-bold mb-4 tracking-wider" style={{ fontFamily: "var(--font-space)" }}>
+                      🌟 EMERGING SECTORS
+                    </h3>
                     <div className="space-y-3">
                       {["Artificial Gravity", "Gene Editing in Space", "3D Bioprinting", "Cryopreservation"].map(
                         (area, idx) => (
@@ -368,8 +245,10 @@ export default function VisualizationsPage() {
                     </div>
                   </Card>
 
-                  <Card className="p-6 bg-card/50 backdrop-blur-sm border-nebula/20 hover:scale-[1.02] transition-transform duration-300">
-                    <h3 className="text-lg font-bold mb-4">Top Collaborations</h3>
+                  <Card className="p-6 bg-card/30 backdrop-blur-md border-nebula/20 hover:scale-[1.02] transition-transform duration-300 tech-corner power-on" style={{ animationDelay: '0.1s' }}>
+                    <h3 className="text-lg font-bold mb-4 tracking-wider" style={{ fontFamily: "var(--font-space)" }}>
+                      🤝 ALLIANCE OPERATIONS
+                    </h3>
                     <div className="space-y-3">
                       {[
                         { orgs: "NASA × ESA", projects: 45 },
@@ -397,50 +276,49 @@ export default function VisualizationsPage() {
               <TabsContent value="impact" className="space-y-6">
                 <div className="grid md:grid-cols-3 gap-6">
                   <Card 
-                    className="p-6 bg-gradient-to-br from-primary/20 to-primary/5 backdrop-blur-sm border-primary/30 hover:scale-105 transition-all duration-300 cursor-pointer"
+                    className="p-6 bg-gradient-to-br from-primary/20 to-primary/5 backdrop-blur-md border-primary/30 hover:scale-105 transition-all duration-300 cursor-pointer tech-corner power-on"
                     style={{
-                      transform: 'perspective(1000px) rotateY(-5deg)',
-                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+                      boxShadow: '0 0 30px rgba(112, 182, 246, 0.2)',
                     }}
                   >
-                    <h3 className="text-3xl font-black mb-2 animate-in zoom-in duration-700" style={{ fontFamily: "var(--font-space)" }}>
+                    <h3 className="text-3xl font-black mb-2 animate-in zoom-in duration-700 glow-text" style={{ fontFamily: "var(--font-space)" }}>
                       12,847
                     </h3>
-                    <p className="text-sm text-muted-foreground">Total Citations</p>
-                    <p className="text-xs text-primary mt-2">↑ 32% from last year</p>
+                    <p className="text-sm text-muted-foreground font-mono">Total Citations</p>
+                    <p className="text-xs text-primary mt-2 font-mono">↑ 32% from last year</p>
                   </Card>
 
                   <Card 
-                    className="p-6 bg-gradient-to-br from-accent/20 to-accent/5 backdrop-blur-sm border-accent/30 hover:scale-105 transition-all duration-300 cursor-pointer"
+                    className="p-6 bg-gradient-to-br from-accent/20 to-accent/5 backdrop-blur-md border-accent/30 hover:scale-105 transition-all duration-300 cursor-pointer tech-corner power-on"
                     style={{
-                      transform: 'perspective(1000px) rotateY(0deg)',
-                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+                      boxShadow: '0 0 30px rgba(167, 139, 250, 0.2)',
+                      animationDelay: '0.1s',
                     }}
                   >
-                    <h3 className="text-3xl font-black mb-2 animate-in zoom-in duration-700 delay-100" style={{ fontFamily: "var(--font-space)" }}>
+                    <h3 className="text-3xl font-black mb-2 animate-in zoom-in duration-700 delay-100 glow-text" style={{ fontFamily: "var(--font-space)" }}>
                       143
                     </h3>
-                    <p className="text-sm text-muted-foreground">High-Impact Studies</p>
-                    <p className="text-xs text-accent mt-2">50+ citations each</p>
+                    <p className="text-sm text-muted-foreground font-mono">High-Impact Studies</p>
+                    <p className="text-xs text-accent mt-2 font-mono">50+ citations each</p>
                   </Card>
 
                   <Card 
-                    className="p-6 bg-gradient-to-br from-nebula/20 to-nebula/5 backdrop-blur-sm border-nebula/30 hover:scale-105 transition-all duration-300 cursor-pointer"
+                    className="p-6 bg-gradient-to-br from-nebula/20 to-nebula/5 backdrop-blur-md border-nebula/30 hover:scale-105 transition-all duration-300 cursor-pointer tech-corner power-on"
                     style={{
-                      transform: 'perspective(1000px) rotateY(5deg)',
-                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+                      boxShadow: '0 0 30px rgba(236, 72, 153, 0.2)',
+                      animationDelay: '0.2s',
                     }}
                   >
-                    <h3 className="text-3xl font-black mb-2 animate-in zoom-in duration-700 delay-200" style={{ fontFamily: "var(--font-space)" }}>
+                    <h3 className="text-3xl font-black mb-2 animate-in zoom-in duration-700 delay-200 glow-text" style={{ fontFamily: "var(--font-space)" }}>
                       34
                     </h3>
-                    <p className="text-sm text-muted-foreground">Patent Applications</p>
-                    <p className="text-xs text-nebula mt-2">From research findings</p>
+                    <p className="text-sm text-muted-foreground font-mono">Patent Applications</p>
+                    <p className="text-xs text-nebula mt-2 font-mono">From research findings</p>
                   </Card>
                 </div>
 
-                <Card className="p-6 bg-card/50 backdrop-blur-sm border-primary/20">
-                  <h3 className="text-xl font-bold mb-4" style={{ fontFamily: "var(--font-space)" }}>
+                <Card className="p-6 bg-card/30 backdrop-blur-md border-primary/20">
+                  <h3 className="text-xl font-bold mb-4 tracking-wider" style={{ fontFamily: "var(--font-space)" }}>
                     Mission Impact Analysis
                   </h3>
                   <div className="space-y-4">
@@ -478,11 +356,11 @@ export default function VisualizationsPage() {
 
               {/* Knowledge Gaps Tab */}
               <TabsContent value="gaps" className="space-y-6">
-                <Card className="p-6 bg-card/50 backdrop-blur-sm border-primary/20">
-                  <h3 className="text-xl font-bold mb-4" style={{ fontFamily: "var(--font-space)" }}>
+                <Card className="p-6 bg-card/30 backdrop-blur-md border-primary/20">
+                  <h3 className="text-xl font-bold mb-4 tracking-wider" style={{ fontFamily: "var(--font-space)" }}>
                     Identified Knowledge Gaps
                   </h3>
-                  <p className="text-muted-foreground mb-6">
+                  <p className="text-muted-foreground mb-6 font-mono">
                     Areas requiring additional research for safe and successful long-duration space missions
                   </p>
 
@@ -524,8 +402,10 @@ export default function VisualizationsPage() {
                 </Card>
 
                 <div className="grid md:grid-cols-2 gap-6">
-                  <Card className="p-6 bg-card/50 backdrop-blur-sm border-primary/20 hover:scale-[1.02] transition-transform duration-300">
-                    <h3 className="text-lg font-bold mb-4">Consensus Areas</h3>
+                  <Card className="p-6 bg-card/30 backdrop-blur-md border-primary/20 hover:scale-[1.02] transition-transform duration-300 tech-corner power-on">
+                    <h3 className="text-lg font-bold mb-4 tracking-wider" style={{ fontFamily: "var(--font-space)" }}>
+                      📊 CONSENSUS ANALYSIS
+                    </h3>
                     <div className="space-y-3">
                       {[
                         { area: "Exercise Countermeasures", consensus: 94 },
@@ -557,8 +437,10 @@ export default function VisualizationsPage() {
                     </div>
                   </Card>
 
-                  <Card className="p-6 bg-card/50 backdrop-blur-sm border-accent/20 hover:scale-[1.02] transition-transform duration-300">
-                    <h3 className="text-lg font-bold mb-4">Areas of Disagreement</h3>
+                  <Card className="p-6 bg-card/30 backdrop-blur-md border-accent/20 hover:scale-[1.02] transition-transform duration-300 tech-corner power-on">
+                    <h3 className="text-lg font-bold mb-4 tracking-wider" style={{ fontFamily: "var(--font-space)" }}>
+                      ⚠️ DISAGREEMENT ZONES
+                    </h3>
                     <div className="space-y-3">
                       {[
                         { area: "Optimal Artificial Gravity", disagreement: 65 },
@@ -595,25 +477,6 @@ export default function VisualizationsPage() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes slideIn {
-          from {
-            width: 0%;
-          }
-        }
-        
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </>
   );
 }
