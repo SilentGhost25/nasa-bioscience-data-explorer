@@ -92,7 +92,7 @@ export default function VisualizationsPage() {
           {/* Tabs */}
           <div className="max-w-7xl mx-auto">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="mb-6 grid w-full grid-cols-4 lg:w-auto holographic-border">
+              <TabsList className="mb-6 w-full lg:w-auto holographic-border">
                 <TabsTrigger value="overview">
                   <BarChart3 className="h-4 w-4 mr-2" />
                   Overview

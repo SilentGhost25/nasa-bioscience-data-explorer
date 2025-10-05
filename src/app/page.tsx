@@ -29,6 +29,7 @@ export default function Home() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("power-on");
+            entry.target.classList.remove("opacity-0");
           }
         });
       },
@@ -132,7 +133,7 @@ export default function Home() {
           {/* Feature Cards with Power-On Animation */}
           <div 
             ref={(el) => (sectionsRef.current[0] = el)}
-            className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-20 opacity-0"
+            className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-20"
           >
             <Card className="p-6 bg-card backdrop-blur-md holographic-border group hover:scale-105 transition-all duration-300 tech-corner">
               <div className="relative">
@@ -177,7 +178,7 @@ export default function Home() {
           {/* Stats Section with Staggered Power-On */}
           <div 
             ref={(el) => (sectionsRef.current[1] = el)}
-            className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto mb-20 opacity-0"
+            className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto mb-20"
           >
             <Card className="p-6 bg-gradient-to-br from-primary/10 via-card to-card backdrop-blur-md holographic-border text-center group hover:scale-105 transition-all tech-corner">
               <Database className="h-10 w-10 text-primary mx-auto mb-3 group-hover:drop-shadow-[0_0_20px_rgba(100,200,255,1)] transition-all" />
@@ -219,7 +220,7 @@ export default function Home() {
           {/* NASA Live Feed */}
           <div 
             ref={(el) => (sectionsRef.current[2] = el)}
-            className="max-w-4xl mx-auto opacity-0"
+            className="max-w-4xl mx-auto"
           >
             <div className="text-center mb-8">
               <h2 className="text-4xl font-bold mb-4 gradient-text tracking-wider" style={{ fontFamily: "var(--font-space)" }}>
