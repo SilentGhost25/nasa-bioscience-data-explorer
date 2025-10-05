@@ -10,6 +10,7 @@ import RocketLaunchChart from "@/components/visualizations/RocketLaunchChart";
 import OrbitalRingSystem from "@/components/visualizations/OrbitalRingSystem";
 import DeepSpaceScanner from "@/components/visualizations/DeepSpaceScanner";
 import DataStreamBackground from "@/components/visualizations/DataStreamBackground";
+import KnowledgeGraph from "@/components/KnowledgeGraph";
 import {
   AreaChart,
   Area,
@@ -183,6 +184,27 @@ export default function VisualizationsPage() {
                 >
                   <Network className="h-5 w-5 mr-2" />
                   KNOWLEDGE GAPS
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="graph"
+                  className="
+                    min-h-[48px] px-6 py-3 font-semibold tracking-wide
+                    data-[state=active]:bg-primary/20 
+                    data-[state=active]:text-primary
+                    data-[state=active]:border-primary/50
+                    data-[state=active]:shadow-[0_0_20px_rgba(112,182,246,0.4),inset_0_0_20px_rgba(112,182,246,0.1)]
+                    data-[state=inactive]:text-muted-foreground
+                    data-[state=inactive]:hover:text-foreground
+                    data-[state=inactive]:hover:bg-primary/5
+                    border border-transparent
+                    transition-all duration-300
+                    rounded-lg
+                    tech-corner
+                  "
+                  style={{ fontFamily: "var(--font-space)" }}
+                >
+                  <Network className="h-5 w-5 mr-2" />
+                  3D KNOWLEDGE GRAPH
                 </TabsTrigger>
               </TabsList>
 
@@ -554,6 +576,21 @@ export default function VisualizationsPage() {
                     </div>
                   </Card>
                 </div>
+              </TabsContent>
+
+              {/* 3D Knowledge Graph Tab */}
+              <TabsContent value="graph" className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <Card className="p-6 bg-card/30 backdrop-blur-md border-primary/20">
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold mb-2 tracking-wider gradient-text" style={{ fontFamily: "var(--font-space)" }}>
+                      🌐 INTERACTIVE 3D KNOWLEDGE GRAPH
+                    </h3>
+                    <p className="text-muted-foreground font-mono">
+                      Explore connections between 608 NASA bioscience publications in an immersive 3D space
+                    </p>
+                  </div>
+                  <KnowledgeGraph />
+                </Card>
               </TabsContent>
             </Tabs>
           </div>

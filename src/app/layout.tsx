@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import FloatingChatButton from "@/components/FloatingChatButton";
 
 export const metadata: Metadata = {
   title: "NASA Biospace - Interactive Research Dashboard",
@@ -15,6 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         {children}
+        <FloatingChatButton />
       </body>
     </html>
   );
